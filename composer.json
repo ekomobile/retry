@@ -1,0 +1,21 @@
+{
+    "name": "ekomobile/retry",
+    "description": "Retry with backoff",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander Zhuravlev",
+            "email": "a.zhuravlev@ekomobile.ru"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ekomobile\\Retry\\": "src/Retry/"
+        }
+    }
+}
