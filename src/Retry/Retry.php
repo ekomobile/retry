@@ -1,6 +1,6 @@
 <?php
 
-namespace Retry;
+namespace Ekomobile\Retry;
 
 use Ekomobile\Retry\Backoff\BackOffInterface;
 use Ekomobile\Retry\Backoff\Exponential;

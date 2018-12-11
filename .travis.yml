@@ -9,10 +9,3 @@ php:
 cache:
   directories:
     - $HOME/.composer/cache
-
-before_install:
-  - composer self-update
-  - composer validate --no-check-publish
-
-install:
-  - composer install
