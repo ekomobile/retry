@@ -53,7 +53,7 @@ $operation = function () {
     throw new \Ekomobile\Retry\Exception\Permanent(new \Exception('Unretryable error'))
   }
   // ...
-  throw new new Exception('Retryable error')
+  throw new Exception('Retryable error')
 };
 
 $backoff = new \Ekomobile\Retry\Backoff\WithMaxRetries(new \Ekomobile\Retry\Backoff\Exponential(), 5);
