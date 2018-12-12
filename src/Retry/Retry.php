@@ -2,7 +2,7 @@
 
 namespace Ekomobile\Retry;
 
-use Ekomobile\Retry\Backoff\BackOffInterface;
+use Ekomobile\Retry\Backoff\BackoffInterface;
 use Ekomobile\Retry\Backoff\Exponential;
 use Ekomobile\Retry\Exception\Permanent;
 
@@ -14,21 +14,21 @@ class Retry
     /** @var callable */
     private $operation;
 
-    /** @var BackOffInterface */
-    private $backOff;
+    /** @var BackoffInterface */
+    private $backoff;
 
     /** @var callable|null */
     private $notify;
 
     /**
      * @param callable              $operation
-     * @param BackOffInterface|null $backOff
+     * @param BackoffInterface|null $backoff
      * @param callable|null         $notify
      */
-    public function __construct(callable $operation, BackOffInterface $backOff = null, callable $notify = null)
+    public function __construct(callable $operation, BackoffInterface $backoff = null, callable $notify = null)
     {
         $this->operation = $operation;
-        $this->backOff = $backOff ?? new Exponential();
+        $this->backoff = $backoff ?? new Exponential();
         $this->notify = $notify;
     }
 
@@ -37,7 +37,7 @@ class Retry
      */
     public function __invoke()
     {
-        $this->backOff->resetBackOff();
+        $this->backoff->resetBackoff();
 
         while (true) {
             try {
@@ -55,12 +55,12 @@ class Retry
                     ($this->notify)($e);
                 }
 
-                $backOffDuration = $this->backOff->nextBackOff();
-                if ($backOffDuration == BackOffInterface::STOP) {
+                $backoffDuration = $this->backoff->nextBackoff();
+                if ($backoffDuration == BackoffInterface::STOP) {
                     throw $e;
                 }
 
-                \usleep($backOffDuration);
+                \usleep($backoffDuration);
             }
         }
     }

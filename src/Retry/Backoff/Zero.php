@@ -2,13 +2,13 @@
 
 namespace Ekomobile\Retry\Backoff;
 
-class Zero implements BackOffInterface
+class Zero implements BackoffInterface
 {
-    public function resetBackOff(): void
+    public function resetBackoff(): void
     {
     }
 
-    public function nextBackOff(): int
+    public function nextBackoff(): int
     {
         return 0;
     }

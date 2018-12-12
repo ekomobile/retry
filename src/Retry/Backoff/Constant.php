@@ -2,7 +2,7 @@
 
 namespace Ekomobile\Retry\Backoff;
 
-class Constant implements BackOffInterface
+class Constant implements BackoffInterface
 {
     /** @var int microseconds */
     private $interval;
@@ -12,11 +12,11 @@ class Constant implements BackOffInterface
         $this->interval = $interval;
     }
 
-    public function resetBackOff(): void
+    public function resetBackoff(): void
     {
     }
 
-    public function nextBackOff(): int
+    public function nextBackoff(): int
     {
         return $this->interval;
     }

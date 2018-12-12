@@ -5,11 +5,11 @@ namespace Ekomobile\Retry\Backoff;
 /**
  *
  */
-class Exponential implements BackOffInterface
+class Exponential implements BackoffInterface
 {
-    public const DEFAULT_TIMEOUT              = 15 * BackOffInterface::MINUTE;
-    public const DEFAULT_MAX_INTERVAL         = 60 * BackOffInterface::SECOND;
-    public const DEFAULT_INITIAL_INTERVAL     = 0.5 * BackOffInterface::SECOND;
+    public const DEFAULT_TIMEOUT              = 15 * BackoffInterface::MINUTE;
+    public const DEFAULT_MAX_INTERVAL         = 60 * BackoffInterface::SECOND;
+    public const DEFAULT_INITIAL_INTERVAL     = 0.5 * BackoffInterface::SECOND;
     public const DEFAULT_RANDOMIZATION_FACTOR = 0.5;
     public const DEFAULT_MULTIPLIER           = 1.5;
 
@@ -55,25 +55,25 @@ class Exponential implements BackOffInterface
         $this->randomizationFactor = $randomizationFactor;
         $this->multiplier = $multiplier;
 
-        $this->resetBackOff();
+        $this->resetBackoff();
     }
 
-    public function resetBackOff(): void
+    public function resetBackoff(): void
     {
         $this->currentInterval = $this->initialInterval;
         $this->startTime = $this->time();
     }
 
-    public function nextBackOff(): int
+    public function nextBackoff(): int
     {
         if ($this->timeout != 0 && $this->getElapsedTime() > $this->timeout) {
-            return BackOffInterface::STOP;
+            return BackoffInterface::STOP;
         }
 
-        $backOffInterval = $this->getRandomizedInterval($this->randomizationFactor, $this->currentInterval);
+        $backoffInterval = $this->getRandomizedInterval($this->randomizationFactor, $this->currentInterval);
         $this->incrementInterval();
 
-        return $backOffInterval;
+        return $backoffInterval;
     }
 
     /**

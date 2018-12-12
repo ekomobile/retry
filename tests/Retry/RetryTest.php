@@ -2,7 +2,7 @@
 
 namespace Ekomobile\Retry;
 
-use Ekomobile\Retry\Backoff\BackOffInterface;
+use Ekomobile\Retry\Backoff\BackoffInterface;
 use Ekomobile\Retry\Exception\Permanent;
 use PHPUnit\Framework\TestCase;
 
@@ -15,12 +15,12 @@ class RetryTest extends TestCase
         $operation->expects($this->once())
             ->method('__invoke');
 
-        /** @var BackOffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
-        $backoff = $this->createMock(BackOffInterface::class);
+        /** @var BackoffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
+        $backoff = $this->createMock(BackoffInterface::class);
         $backoff->expects($this->once())
-            ->method('resetBackOff');
+            ->method('resetBackoff');
         $backoff->expects($this->never())
-            ->method('nextBackOff');
+            ->method('nextBackoff');
 
         $r = new Retry($operation, $backoff);
 
@@ -36,12 +36,12 @@ class RetryTest extends TestCase
             ->method('__invoke')
             ->willThrowException(new Permanent(new \Exception()));
 
-        /** @var BackOffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
-        $backoff = $this->createMock(BackOffInterface::class);
+        /** @var BackoffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
+        $backoff = $this->createMock(BackoffInterface::class);
         $backoff->expects($this->once())
-            ->method('resetBackOff');
+            ->method('resetBackoff');
         $backoff->expects($this->never())
-            ->method('nextBackOff');
+            ->method('nextBackoff');
 
         $this->expectException(\Exception::class);
         $r = new Retry($operation, $backoff);
@@ -56,13 +56,13 @@ class RetryTest extends TestCase
             ->method('__invoke')
             ->willThrowException(new \Exception());
 
-        /** @var BackOffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
-        $backoff = $this->createMock(BackOffInterface::class);
+        /** @var BackoffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
+        $backoff = $this->createMock(BackoffInterface::class);
         $backoff->expects($this->once())
-            ->method('resetBackOff');
+            ->method('resetBackoff');
         $backoff->expects($this->once())
-            ->method('nextBackOff')
-            ->willReturn(BackOffInterface::STOP);
+            ->method('nextBackoff')
+            ->willReturn(BackoffInterface::STOP);
 
         $this->expectException(\Exception::class);
         $r = new Retry($operation, $backoff);
@@ -77,13 +77,13 @@ class RetryTest extends TestCase
             ->method('__invoke')
             ->willThrowException(new \Exception());
 
-        /** @var BackOffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
-        $backoff = $this->createMock(BackOffInterface::class);
+        /** @var BackoffInterface|\PHPUnit\Framework\MockObject\MockObject $backoff */
+        $backoff = $this->createMock(BackoffInterface::class);
         $backoff->expects($this->once())
-            ->method('resetBackOff');
+            ->method('resetBackoff');
         $backoff->expects($this->exactly(3))
-            ->method('nextBackOff')
-            ->willReturnOnConsecutiveCalls(10, 10, BackOffInterface::STOP);
+            ->method('nextBackoff')
+            ->willReturnOnConsecutiveCalls(10, 10, BackoffInterface::STOP);
 
         $this->expectException(\Exception::class);
         $r = new Retry($operation, $backoff);

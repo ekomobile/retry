@@ -5,7 +5,7 @@ namespace Ekomobile\Retry\Backoff;
 /**
  *
  */
-class WithMaxRetries implements BackOffInterface
+class WithMaxRetries implements BackoffInterface
 {
     /** @var int */
     private $maxRetries;
@@ -13,42 +13,42 @@ class WithMaxRetries implements BackOffInterface
     /** @var int */
     private $numRetries;
 
-    /** @var BackOffInterface */
-    private $backOff;
+    /** @var BackoffInterface */
+    private $backoff;
 
     /**
-     * @param BackOffInterface $backOff
+     * @param BackoffInterface $backoff
      * @param int              $maxRetries
      */
-    public function __construct(BackOffInterface $backOff, int $maxRetries)
+    public function __construct(BackoffInterface $backoff, int $maxRetries)
     {
-        $this->backOff = $backOff;
+        $this->backoff = $backoff;
         $this->maxRetries = $maxRetries;
 
-        $this->resetBackOff();
+        $this->resetBackoff();
     }
 
     /**
      *
      */
-    public function resetBackOff(): void
+    public function resetBackoff(): void
     {
         $this->numRetries = $this->maxRetries;
-        $this->backOff->resetBackOff();
+        $this->backoff->resetBackoff();
     }
 
     /**
      * @return int
      */
-    public function nextBackOff(): int
+    public function nextBackoff(): int
     {
         if ($this->maxRetries > 0) {
             if ($this->numRetries >= $this->maxRetries) {
-                return BackOffInterface::STOP;
+                return BackoffInterface::STOP;
             }
             $this->numRetries++;
         }
 
-        return $this->backOff->nextBackOff();
+        return $this->backoff->nextBackoff();
     }
 }
