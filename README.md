@@ -32,3 +32,36 @@ The retries exponentially increase and stop increasing when a certain threshold 
 
 [google-http-java-client]: https://github.com/google/google-http-java-client/blob/da1aa993e90285ec18579f1553339b00e19b3ab5/google-http-client/src/main/java/com/google/api/client/util/ExponentialBackOff.java
 [exponential backoff wiki]: http://en.wikipedia.org/wiki/Exponential_backoff
+
+## Examples
+
+### Simple
+Retry with default exponential backoff.
+```php
+(new Retry(function () {
+    // workload ...
+}))();
+
+```
+
+### Advanced
+
+```php
+$operation = function () {
+  // workload ...
+  if ($somePermanentFailCondition) {
+    throw new \Ekomobile\Retry\Exception\Permanent(new \Exception('Unretryable error'))
+  }
+  // ...
+  throw new new Exception('Retryable error')
+};
+
+$backoff = new \Ekomobile\Retry\Backoff\WithMaxRetries(new \Ekomobile\Retry\Backoff\Exponential(), 5);
+
+$notify = function (\Throwable $e) {
+  // $logger->log($e);
+};
+
+$retry = new \Ekomobile\Retry\Retry($operation, $backoff, $notify);
+$retry();
+```
