@@ -18,18 +18,18 @@ class Retry
     private $backoff;
 
     /** @var callable|null */
-    private $notify;
+    private $notifyVisitor;
 
     /**
      * @param callable              $operation
      * @param BackoffInterface|null $backoff
-     * @param callable|null         $notify
+     * @param callable|null         $notifyVisitor
      */
-    public function __construct(callable $operation, BackoffInterface $backoff = null, callable $notify = null)
+    public function __construct(callable $operation, BackoffInterface $backoff = null, callable $notifyVisitor = null)
     {
         $this->operation = $operation;
         $this->backoff = $backoff ?? new Exponential();
-        $this->notify = $notify;
+        $this->notifyVisitor = $notifyVisitor;
     }
 
     /**
@@ -45,23 +45,27 @@ class Retry
                 break;
 
             } catch (Permanent $e) {
-                if ($this->notify) {
-                    ($this->notify)($e->getPrevious());
-                }
                 throw $e->getPrevious();
 
             } catch (\Throwable $e) {
-                if ($this->notify) {
-                    ($this->notify)($e);
-                }
-
                 $backoffDuration = $this->backoff->nextBackoff();
                 if ($backoffDuration == BackoffInterface::STOP) {
                     throw $e;
                 }
 
+                $this->notify($e);
                 \usleep($backoffDuration);
             }
+        }
+    }
+
+    /**
+     * @param \Throwable $e
+     */
+    private function notify(\Throwable $e): void
+    {
+        if ($this->notifyVisitor) {
+            ($this->notifyVisitor)($e);
         }
     }
 }
