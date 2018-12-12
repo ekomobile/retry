@@ -5,6 +5,10 @@ sudo: false
 php:
   - 7.2
 
+env:
+  global:
+    - CC_TEST_REPORTER_ID="40cd7264c780e5ff90b014474a4a7014f74f7f258d4a19d7406d4b68206e3c02"
+
 # cache composer downloads so installing is quicker
 cache:
   directories:
@@ -12,3 +16,15 @@ cache:
 
 install:
   - composer install
+
+before_script:
+  # coverage reporter
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - phpunit --coverage-clover clover.xml
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
