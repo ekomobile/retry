@@ -14,19 +14,19 @@ class Exponential implements BackoffInterface
     public const DEFAULT_MULTIPLIER           = 1.5;
 
     /** @var int microseconds */
-    private $timeout;
+    private $timeout = self::DEFAULT_TIMEOUT;
 
     /** @var int microseconds */
-    private $maxInterval;
+    private $maxInterval = self::DEFAULT_MAX_INTERVAL;
 
     /** @var float microseconds */
-    private $initialInterval;
+    private $initialInterval = self::DEFAULT_INITIAL_INTERVAL;
 
     /** @var float */
-    private $randomizationFactor;
+    private $randomizationFactor = self::DEFAULT_RANDOMIZATION_FACTOR;
 
     /** @var float */
-    private $multiplier;
+    private $multiplier = self::DEFAULT_MULTIPLIER;
 
     /** @var int microseconds */
     private $currentInterval;
@@ -35,26 +35,10 @@ class Exponential implements BackoffInterface
     private $startTime;
 
     /**
-     * @param int   $timeout
-     * @param int   $maxInterval
-     * @param int   $initialInterval
-     * @param float $randomizationFactor
-     * @param float $multiplier
+     *
      */
-    public function __construct(
-        int $timeout = self::DEFAULT_TIMEOUT,
-        int $maxInterval = self::DEFAULT_MAX_INTERVAL,
-        int $initialInterval = self::DEFAULT_INITIAL_INTERVAL,
-        float $randomizationFactor = self::DEFAULT_RANDOMIZATION_FACTOR,
-        float $multiplier = self::DEFAULT_MULTIPLIER
-    )
+    public function __construct()
     {
-        $this->timeout = $timeout;
-        $this->maxInterval = $maxInterval;
-        $this->initialInterval = $initialInterval;
-        $this->randomizationFactor = $randomizationFactor;
-        $this->multiplier = $multiplier;
-
         $this->resetBackoff();
     }
 
@@ -74,6 +58,106 @@ class Exponential implements BackoffInterface
         $this->incrementInterval();
 
         return $backoffInterval;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeout(): int
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * @param int $timeout
+     *
+     * @return self
+     */
+    public function setTimeout(int $timeout): self
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxInterval(): int
+    {
+        return $this->maxInterval;
+    }
+
+    /**
+     * @param int $maxInterval
+     *
+     * @return self
+     */
+    public function setMaxInterval(int $maxInterval): self
+    {
+        $this->maxInterval = $maxInterval;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getInitialInterval(): float
+    {
+        return $this->initialInterval;
+    }
+
+    /**
+     * @param float $initialInterval
+     *
+     * @return self
+     */
+    public function setInitialInterval(float $initialInterval): self
+    {
+        $this->initialInterval = $initialInterval;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getRandomizationFactor(): float
+    {
+        return $this->randomizationFactor;
+    }
+
+    /**
+     * @param float $randomizationFactor
+     *
+     * @return self
+     */
+    public function setRandomizationFactor(float $randomizationFactor): self
+    {
+        $this->randomizationFactor = $randomizationFactor;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMultiplier(): float
+    {
+        return $this->multiplier;
+    }
+
+    /**
+     * @param float $multiplier
+     *
+     * @return self
+     */
+    public function setMultiplier(float $multiplier): self
+    {
+        $this->multiplier = $multiplier;
+
+        return $this;
     }
 
     /**
